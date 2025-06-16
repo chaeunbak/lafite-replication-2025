@@ -10,7 +10,7 @@
 ## 필자의 실험 환경
 
 * GPU: NVIDIA RTX 3090
-* CUDA: 11.3
+* CUDA: 11.3 (높은 버전을 사용하면 오류가 발생할 수 있습니다.)
 * CPU: intel Core i7-10700K
 * RAM: 32GB
 * 운영체제: Windows 10
@@ -58,6 +58,8 @@ python train.py --gpus=1 --outdir=./outputs/ \
 이 데이터셋으로 빠른 테스트 학습이 가능합니다.
 
 ## 환경 설정 관련 이슈
+
+CUDA 버전은 제가 제시한 낮은 버전(11.3)을 사용하셔야 합니다. StyleGAN2와의 호환성 때문입니다.
 
 학습 중 PyTorch CUDA 관련 플러그인 설치 오류 (`bias_act_plugin`, `upfirdn2d_plugin`)가 발생할 경우 다음을 수행하세요.
 
