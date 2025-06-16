@@ -4,6 +4,9 @@
 
 원본 LAFITE 깃허브 저장소는 [여기](https://github.com/drboog/Lafite/tree/main?tab=readme-ov-file)에서 확인할 수 있습니다.
 
+현재 인터넷상에서 공유되고 있는 Pretrained-model이 존재하지 않아서, 직접 모델을 학습할 필요가 있어 그 과정을 담았습니다. 3일간 학습한 모델을 공유하겠습니다.
+공유한 모델을 가지고 generate.ipynb 을 실행하면, 간단하게 Language-free 모델을 사용하여 이미지를 생성해볼 수 있습니다.
+
 ## 필자의 실험 환경
 
 * GPU: NVIDIA RTX 3090
