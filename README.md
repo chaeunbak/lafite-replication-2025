@@ -1,92 +1,108 @@
-# Lafite
-Code for paper [LAFITE: Towards Language-Free Training for Text-to-Image Generation](https://arxiv.org/abs/2111.13792) (CVPR 2022)
+# LAFITE (Language-Free Training for Text-to-Image Generation)
 
-Looking for a better language-free method? Try [this](https://github.com/drboog/Shifted_Diffusion).
+> 🧠 Official implementation of [LAFITE: Towards Language-Free Training for Text-to-Image Generation (CVPR 2022)](https://arxiv.org/abs/2111.13792)
 
-## Requirements
+**LAFITE** is the *first* text-to-image model that enables training **without any paired text captions**.  
+It leverages the multimodal embedding space of CLIP to generate images based on pseudo text features extracted from images alone.
 
-The implementation is based on [stylegan2-ada-pytorch](https://github.com/NVlabs/stylegan2-ada-pytorch) and [CLIP](https://github.com/openai/CLIP), the required packages can be found in the links.
+> Looking for newer methods? Try this [Shifted Diffusion](https://github.com/drboog/Shifted_Diffusion)
 
+---
 
-## Preparing Datasets
-Example:
-```
-python dataset_tool.py --source=./path_to_some_dataset/ --dest=./datasets/some_dataset.zip --width=256 --height=256 --transform=center-crop
-```
-the files at ./path_to_some_dataset/ should be like:
+## 🔧 Setup & Dependencies
 
-./path_to_some_dataset/
+This repo is based on:
+- [StyleGAN2-ADA (PyTorch)](https://github.com/NVlabs/stylegan2-ada-pytorch)
+- [CLIP (OpenAI)](https://github.com/openai/CLIP)
 
-&ensp;&ensp;&boxvr;&nbsp; 1.png
+Install the required dependencies listed in the original StyleGAN2-ADA and CLIP repos.
 
-&ensp;&ensp;&boxvr;&nbsp; 1.txt
+---
 
-&ensp;&ensp;&boxvr;&nbsp; 2.png
+## 📂 Dataset Preparation
 
-&ensp;&ensp;&boxvr;&nbsp; 2.txt
-
-&ensp;&ensp;&boxvr;&nbsp; ...
-
-We provide links to several commonly used datasets that we have already processed (with CLIP-ViT/B-32):
-
-[MS-COCO Training Set](https://drive.google.com/file/d/1b82BCh65XxwR-TiA8zu__wwiEHLCgrw2/view?usp=sharing) 
-
-[MS-COCO Validation Set](https://drive.google.com/file/d/1qBy5rPfo1go4d-PjF_Gu0kESCZ9Nt1Ta/view?usp=sharing)
-
-[LN-COCO Training Set](https://drive.google.com/file/d/177Q_TGEXmIf_bk8j3bE_yAhr_3YrhLQY/view?usp=sharing)
-
-[LN-COCO Testing Set](https://drive.google.com/file/d/12o2q2K7Ia6GTeqKL-g4x52t1Dv9lRrpK/view?usp=sharing)
-
-[Multi-modal CelebA-HQ Training Set](https://drive.google.com/file/d/1TVpvwfi40Quk1oG1xvc8K2EQfb0koWN5/view?usp=sharing)
-
-[Multi-modal CelebA-HQ Testing Set](https://drive.google.com/file/d/1FbsRLyqcQiwsyYENEvtP01-w9l1Hzpvl/view?usp=sharing)
-
-[CUB Training Set](https://drive.google.com/file/d/1Hc3JZnHiDLpM6L2DuFuMTFTBXLgRB5DL/view?usp=sharing)
-
-[CUB Testing Set](https://drive.google.com/file/d/1tzJQnwtAd7bhs0bLAzNGwCeC-DItUoKJ/view?usp=sharing)
-
-## Training
-
-These hyper-parameters are used for **MS-COCO**. Please tune **itd**, **itc** and **gamma** on different datasets, they might be **sensitive** to datasets.
-
-Examples:
-
-Training with ground-truth pairs
-```
-python train.py --gpus=4 --outdir=./outputs/ --temp=0.5 --itd=5 --itc=10 --gamma=10 --mirror=1 --data=./datasets/COCO2014_train_CLIP_ViTB32.zip --test_data=./datasets/COCO2014_val_CLIP_ViTB32.zip --mixing_prob=0.0
+To convert your dataset:
+```bash
+python dataset_tool.py --source=./your_dataset/ --dest=./datasets/your_dataset.zip --width=256 --height=256 --transform=center-crop
 ```
 
-Training with language-free methods (pseudo image-text feature pairs)
+**Required format**:
 ```
-python train.py --gpus=4 --outdir=./outputs/ --temp=0.5 --itd=10 --itc=10 --gamma=10 --mirror=1 --data=./datasets/COCO2014_train_CLIP_ViTB32.zip --test_data=./datasets/COCO2014_val_CLIP_ViTB32.zip --mixing_prob=1.0
-```
-
-## Pre-trained Models
-Here we provide several pre-trained models (on google drive). 
-
-[Model trained on MS-COCO, Language-free (Lafite-G), CLIP-ViT/B-32](https://drive.google.com/file/d/1eNkuZyleGJ3A3WXTCIGYXaPwJ6NH9LRA/view?usp=sharing)
-
-[Model trained on MS-COCO, Language-free (Lafite-NN), CLIP-ViT/B-32](https://drive.google.com/file/d/1WQnlCM4pQZrw3u9ZeqjeUNqHuYfiDEU3/view?usp=sharing)
-
-[Model trained on MS-COCO with Ground-truth Image-text Pairs, CLIP-ViT/B-32](https://drive.google.com/file/d/1tMD6MWydRDMaaM7iTOKsUK-Wv2YNDRRt/view?usp=sharing)
-
-[Model trained on MS-COCO with Ground-truth Image-text Pairs, CLIP-ViT/B-16](https://drive.google.com/file/d/1sYlYmPE6MKwp_2NxquxdGyWV8htVfCGX/view?usp=sharing)
-
-[Model Pre-trained On Google CC3M](https://drive.google.com/file/d/17ER7Yl02Y6yCPbyWxK_tGrJ8RKkcieKq/view?usp=sharing)
-
-## Testing
-Calculating metrics:
-
-```
-python calc_metrics.py --network=./some_pre-trained_models.pkl --metrics=fid50k_full,is50k --data=./training_data.zip --test_data=./testing_data.zip
+your_dataset/
+├── 1.png
+├── 1.txt     ← optional (ignored in language-free mode)
+├── 2.png
+├── 2.txt
+└── ...
 ```
 
-To generate images with pre-trained models, you can use ./generate.ipynb. Also, you can try this [Colab notebook](https://colab.research.google.com/github/pollinations/hive/blob/main/interesting_notebooks/LAFITE_generate.ipynb) by @[voodoohop](https://github.com/voodoohop), in which the model pre-trained on CC3M is used.
+📦 Ready-made datasets (CLIP-ViT/B-32 encoded):
+- [MS-COCO Train](https://drive.google.com/file/d/1b82BCh65XxwR-TiA8zu__wwiEHLCgrw2/view)
+- [MS-COCO Val](https://drive.google.com/file/d/1qBy5rPfo1go4d-PjF_Gu0kESCZ9Nt1Ta/view)
+- [LN-COCO, CUB, CelebA-HQ](#) *(see original repo for full list)*
 
-To calculate SOA scores for MS-COCO, you can use ./generate_for_soa.py and [Semantic Object Accuracy for Generative Text-to-Image Synthesis](https://github.com/tohinz/semantic-object-accuracy-for-generative-text-to-image-synthesis)
+---
 
-## Citation
+## 🏋️‍♀️ Training
+
+### With Ground-Truth Pairs (Supervised)
+```bash
+python train.py --gpus=4 --outdir=./outputs/ --temp=0.5 --itd=5 --itc=10 --gamma=10 \
+--mirror=1 --data=./datasets/train.zip --test_data=./datasets/val.zip --mixing_prob=0.0
 ```
+
+### With Pseudo Pairs (Language-Free)
+```bash
+python train.py --gpus=4 --outdir=./outputs/ --temp=0.5 --itd=10 --itc=10 --gamma=10 \
+--mirror=1 --data=./datasets/train.zip --test_data=./datasets/val.zip --mixing_prob=1.0
+```
+
+> 🔎 Key hyperparameters:
+> - `--itd`: discriminator iterations
+> - `--itc`: contrastive iterations
+> - `--gamma`: contrastive loss weight
+
+---
+
+## 🥪 Evaluation & Testing
+
+### FID / IS Metrics
+```bash
+python calc_metrics.py --network=./model.pkl --metrics=fid50k_full,is50k \
+--data=./train.zip --test_data=./val.zip
+```
+
+### Image Generation
+Use `generate.ipynb` locally or try this [Colab Notebook](https://colab.research.google.com/github/pollinations/hive/blob/main/interesting_notebooks/LAFITE_generate.ipynb)
+
+### SOA (Semantic Object Accuracy)
+```bash
+python generate_for_soa.py
+# Refer to: https://github.com/tohinz/semantic-object-accuracy-for-generative-text-to-image-synthesis
+```
+
+---
+
+## 📦 Pre-trained Models
+
+- [LAFITE-G (MS-COCO, Language-free)](https://drive.google.com/file/d/1eNkuZyleGJ3A3WXTCIGYXaPwJ6NH9LRA/view)
+- [LAFITE-NN (MS-COCO, Language-free)](https://drive.google.com/file/d/1WQnlCM4pQZrw3u9ZeqjeUNqHuYfiDEU3/view)
+- [Supervised (MS-COCO)](https://drive.google.com/file/d/1tMD6MWydRDMaaM7iTOKsUK-Wv2YNDRRt/view)
+- [Pre-trained on CC3M](https://drive.google.com/file/d/17ER7Yl02Y6yCPbyWxK_tGrJ8RKkcieKq/view)
+
+---
+
+## 📊 Highlights from Paper
+
+- 🔹 **No captions needed**: Uses CLIP image encoder to synthesize pseudo-text features.
+- 🔹 **Strong zero-shot performance**: Outperforms DALL-E & CogView on MS-COCO with only 1% model size.
+- 🔹 **Plug & play fine-tuning**: Efficiently fine-tune on downstream datasets using only images.
+- 🔹 **SoTA Results** on MS-COCO, CUB, CelebA-HQ, and LN-COCO with FID and IS.
+
+---
+
+## 📜 Citation
+```bibtex
 @article{zhou2021lafite,
   title={LAFITE: Towards Language-Free Training for Text-to-Image Generation},
   author={Zhou, Yufan and Zhang, Ruiyi and Chen, Changyou and Li, Chunyuan and Tensmeyer, Chris and Yu, Tong and Gu, Jiuxiang and Xu, Jinhui and Sun, Tong},
@@ -95,5 +111,9 @@ To calculate SOA scores for MS-COCO, you can use ./generate_for_soa.py and [Sema
 }
 ```
 
-##
-Please contact yufanzho@buffalo.edu if you have any question.
+---
+
+## 📬 Contact
+
+For questions or collaboration, contact:  
+📧 yufanzho@buffalo.edu
