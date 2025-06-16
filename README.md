@@ -111,6 +111,13 @@ Diffusion을 이용한 Language-free 모델 등 최근의 연구도 존재하므
 
 원본 LAFITE 깃허브 저장소는 [여기](https://github.com/drboog/Lafite/tree/main?tab=readme-ov-file)에서 확인할 수 있습니다.
 
+## 모델 파라미터 공유
+
+인터넷상에 공개된 pretrained 모델이 존재하지 않기 때문에, 필자가 직접 6000 kimg 학습한 모델 파라미터를 공유합니다.
+
+- 🔗 [학습된 모델 다운로드 (.pkl)](https://drive.google.com/file/d/1Q5eejlKAtA8kiyaAVct55GxQoN6-FwH7/view?usp=sharing)
+
+해당 모델은 6000 kimg까지 학습된 상태이며, "photo of dog" 같은 문장에 대해 `.generated.jpg`와 같은 이미지를 생성할 수 있습니다.
 
 # LAFITE Project(EN)
 
@@ -218,4 +225,7 @@ We recommend referring to such works as well to stay up to date.
 ## Additional Resources
 
 The original LAFITE GitHub repository is available [here](https://github.com/drboog/Lafite/tree/main?tab=readme-ov-file).
+
+## pkl
+📦 [Download 6000kimg-trained LAFITE model (.pkl)](https://drive.google.com/file/d/1Q5eejlKAtA8kiyaAVct55GxQoN6-FwH7/view?usp=sharing)
 
