@@ -96,7 +96,10 @@ C:\Users\사용자\.cache\dnnlib\gan-metric\*.pkl
 
 ## 생성 이미지 예시
 
+![](./generated.jpg)
+
 `.generated.jpg`는 필자가 공유한 6000 kimg 학습된 모델 파라미터로 "photo of dog" 문장으로 이미지를 생성한 예시입니다. 실제 논문에서는 25000 kimg를 학습했으므로 보다 고품질의 이미지가 생성되지만, 필자의 실험 환경 특성상 6000 kimg 학습에도 약 3일이 걸렸습니다. 해당 이미지는 `generate.py`를 이용하여 임의로 생성된 것입니다.
+
 
 ## 추가 논문 참고
 
