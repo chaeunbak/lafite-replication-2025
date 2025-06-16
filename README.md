@@ -52,15 +52,6 @@ python train.py --gpus=1 --outdir=./outputs/ \
 --metrics=fid50k_full --snap=2
 ```
 
-## mini 데이터셋 제작
-
-학습 속도를 높이기 위해 mini 데이터셋을 구성할 수도 있습니다.
-
-```bash
-python dataset_tool.py --source=./train2014_mini --dest=./train2014_mini.zip
-python dataset_tool.py --source=./val2014_mini --dest=./val2014_mini.zip
-```
-
 이 데이터셋으로 빠른 테스트 학습이 가능합니다.
 
 ## 환경 설정 관련 이슈
@@ -116,3 +107,112 @@ Diffusion을 이용한 Language-free 모델 등 최근의 연구도 존재하므
 ## 추가 정보
 
 원본 LAFITE 깃허브 저장소는 [여기](https://github.com/drboog/Lafite/tree/main?tab=readme-ov-file)에서 확인할 수 있습니다.
+
+
+# LAFITE Project(EN)
+
+This repository is based on the paper [LAFITE: Towards Language-Free Training for Text-to-Image Generation](https://arxiv.org/abs/2111.13792), and provides a guide to training the model in a language-free manner using the MS-COCO 2014 dataset.
+
+The original LAFITE GitHub repository can be found [here](https://github.com/drboog/Lafite/tree/main?tab=readme-ov-file).
+
+## Experimental Environment
+
+* GPU: NVIDIA RTX 3090
+* CUDA: 11.3
+* CPU: intel Core i7-10700K
+* RAM: 32GB
+* OS: Windows 10
+
+## Requirements
+
+To avoid dependency issues, a `requirements.txt` file is provided for easy setup.
+
+```bash
+pip install -r requirements.txt
+```
+
+## Dataset Preparation
+
+Download the MS-COCO 2014 dataset:
+
+```bash
+curl -O http://images.cocodataset.org/zips/train2014.zip
+curl -O http://images.cocodataset.org/zips/val2014.zip
+```
+
+Unzip the files. **Make sure the folder structure is correct.**
+
+## Data Preprocessing
+
+Use `dataset_tool.py` to preprocess the dataset:
+
+```bash
+python dataset_tool.py --source=./train2014 --dest=./train2014.zip --width=256 --height=256
+python dataset_tool.py --source=./val2014 --dest=./val2014.zip --width=256 --height=256
+```
+
+## Training
+
+To start training, run the following command:
+
+```bash
+python train.py --gpus=1 --outdir=./outputs/ \
+--data=./datasets/train2014.zip --test_data=./datasets/val2014.zip \
+--temp=0.5 --itd=10 --itc=10 --gamma=10 \
+--mixing_prob=1.0 --mirror=1 --kimg=100 --batch=32 --workers=4 \
+--metrics=fid50k_full --snap=2
+```
+
+
+## Troubleshooting Environment Issues
+
+If you encounter PyTorch CUDA plugin compilation errors such as `bias_act_plugin` or `upfirdn2d_plugin`, follow these steps:
+
+### How to Resolve
+
+1. Install Visual Studio 2019 (do not use 2022)
+2. Set the Visual Studio 2019 path at the top of the system environment variables
+3. Install the `ninja` package:
+
+```bash
+pip install ninja
+```
+
+If that doesn't solve the problem, delete the cache files generated during previous training runs:
+
+```
+C:\Users\<username>\.cache\dnnlib\gan-metric\*.pkl
+```
+
+Then rerun the training script.
+
+## Understanding Training Logs
+
+* `tick`: Checkpoint interval
+* `kimg`: Number of images trained (in thousands)
+* `sec/tick`: Time per checkpoint (in seconds)
+* `maintenance`: Time spent on non-training tasks (e.g., saving images)
+* `cpumem`: CPU memory usage
+* `gpumem`: GPU memory usage
+* `augment`: Data augmentation probability (usually 0.000)
+
+## Pretrained Model Sharing
+
+Since no pretrained model is publicly available online, I am sharing my own trained model after 6000 kimg. The model file is provided in `.pkl` format.
+
+## Generated Image Example
+
+The `.generated.jpg` file was created using the 6000 kimg trained model shared above, conditioned on the prompt "photo of dog." While the original paper trained for 25000 kimg, this model was trained only up to 6000 kimg due to hardware limitations (which took approximately 3 days). The image was generated using a modified `generate.py` script.
+
+## Further References
+
+There are more recent studies using diffusion-based models for language-free generation. One such promising method is:
+
+* [Shifted Diffusion](https://github.com/drboog/Shifted_Diffusion)
+
+We recommend referring to such works as well to stay up to date.
+
+## Additional Resources
+
+The original LAFITE GitHub repository is available [here](https://github.com/drboog/Lafite/tree/main?tab=readme-ov-file).
+
