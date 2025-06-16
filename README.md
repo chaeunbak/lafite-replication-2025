@@ -2,19 +2,22 @@
 
 본 저장소는 [LAFITE: Towards Language-Free Training for Text-to-Image Generation](https://arxiv.org/abs/2111.13792) 논문을 바탕으로 MS-COCO 2014 데이터셋을 사용하여 Language-free 방식으로 학습을 수행하는 과정을 안내합니다.
 
+원본 LAFITE 깃허브 저장소는 [여기](https://github.com/drboog/Lafite/tree/main?tab=readme-ov-file)에서 확인할 수 있습니다.
+
+## 필자의 실험 환경
+
+* GPU: NVIDIA RTX 3090
+* CUDA: 11.3
+* CPU: intel Core i7-10700K
+* RAM: 32GB
+* 운영체제: Windows 10
+
 ## 사전 요구사항
 
-다음과 같은 패키지를 설치해야 합니다.
-
-* torch
-* torchvision
-* click
-* clip
-* styleGAN
+다음과 같은 패키지를 설치해야 합니다. 패키지 설치 과정에서 어려움을 겪지 않도록 필자가 직접 준비한 `requirements.txt` 파일을 사용하시면 편리합니다.
 
 ```bash
-pip install torch torchvision click
-# CLIP 및 StyleGAN은 각 공식 깃허브에서 설치 안내를 참조
+pip install -r requirements.txt
 ```
 
 ## 데이터셋 준비
@@ -96,35 +99,20 @@ C:\Users\사용자\.cache\dnnlib\gan-metric\*.pkl
 * `gpumem`: GPU 메모리 사용량
 * `augment`: 데이터 증강 확률 (보통 0.000)
 
+## 모델 파라미터 공유
+
+인터넷상에 공개된 pretrained 모델이 없기 때문에, 필자가 직접 6000 kimg 학습한 모델 파라미터를 `.pkl` 형태로 공유합니다.
+
+## 생성 이미지 예시
+
+`.generated.jpg`는 필자가 공유한 6000 kimg 학습된 모델 파라미터로 "photo of dog" 문장으로 이미지를 생성한 예시입니다. 실제 논문에서는 25000 kimg를 학습했으므로 보다 고품질의 이미지가 생성되지만, 필자의 실험 환경 특성상 6000 kimg 학습에도 약 3일이 걸렸습니다. 해당 이미지는 `generate.py`를 이용하여 임의로 생성된 것입니다.
+
+## 추가 논문 참고
+
+Diffusion을 이용한 Language-free 모델 등 최근의 연구도 존재하므로, 이러한 논문도 함께 참고하시면 좋습니다.
+
+* [Shifted Diffusion 모델](https://github.com/drboog/Shifted_Diffusion)
+
 ## 추가 정보
 
-### step 0 \~ step 5 설명
-
-학습 시 저장되는 이미지의 `step`은 CLIP 텍스트 조건 문장 리스트의 각 항목을 의미합니다.
-
-```python
-text = [
-    'A living area with a television and a table',
-    'A child eating a birthday cake near some balloons',
-    'A small kitchen with low ceiling',
-    'A group of skiers are preparing to ski down a mountain',
-    'A school bus in the forest',
-    'A green train is coming down the tracks'
-]
-```
-
-각 문장이 step=0\~5 이미지와 매칭됩니다.
-
-## 학습 결과
-
-학습 완료된 모델과 결과는 `./outputs` 디렉토리에 저장됩니다. 필요에 따라 Tensorboard를 통해 학습 과정을 시각화할 수 있습니다.
-
-```bash
-pip install tensorboard
-```
-
-```bash
-tensorboard --logdir=./outputs
-```
-
-이제 준비된 환경과 데이터로 성공적으로 LAFITE 학습을 진행할 수 있습니다.
+원본 LAFITE 깃허브 저장소는 [여기](https://github.com/drboog/Lafite/tree/main?tab=readme-ov-file)에서 확인할 수 있습니다.
